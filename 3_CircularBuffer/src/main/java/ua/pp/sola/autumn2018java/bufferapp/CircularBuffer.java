@@ -32,7 +32,7 @@ public class CircularBuffer<T> {
     private int size;
     private int initialCapacity;
     private Object[] data;
-    private int readPointer;st
+    private int readPointer;
     private int writePointer;
     /*set True when read pointer resetted to start and set false when write pointer resetted to start*/
     private boolean isSameCycle;
