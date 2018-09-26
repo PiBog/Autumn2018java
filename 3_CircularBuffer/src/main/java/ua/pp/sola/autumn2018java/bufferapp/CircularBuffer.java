@@ -14,9 +14,10 @@
  */
 package ua.pp.sola.autumn2018java.bufferapp;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+
+import lombok.Getter;
+
+import java.util.*;
 
 /**
  * An implementation of circular buffer
@@ -28,10 +29,12 @@ import java.util.List;
  */
 public class CircularBuffer<T> {
 
-    private int initialCapacity;
-    private Object[] data;
+    @Getter
     private int readPointer;
+    @Getter
     private int writePointer;
+    private int initialCapacity;
+    private Object[] elementData;
     /*set True when read pointer resetted to start and set false when write pointer resetted to start*/
     private boolean isSameCycle;
 
@@ -43,7 +46,7 @@ public class CircularBuffer<T> {
     public CircularBuffer(int initialCapacity) {
 
         this.initialCapacity = initialCapacity;
-        data = new Object[initialCapacity];
+        elementData = new Object[initialCapacity];
         this.readPointer = 0;
         this.writePointer = 0;
         isSameCycle = true;
@@ -60,8 +63,12 @@ public class CircularBuffer<T> {
         if (isFull()) {
             throw new RuntimeException("Buffer is full");
         }
-        this.data[this.writePointer] = data;
-        updPointer(writePointer);
+        this.elementData[writePointer] = data;
+        writePointer++;
+        if (writePointer == this.initialCapacity) {
+            writePointer = 0;
+            this.isSameCycle = false;
+        }
     }
 
     /**
@@ -75,8 +82,12 @@ public class CircularBuffer<T> {
         if (isEmpty()) {
             throw new RuntimeException("Buffer is empty");
         }
-        T result = (T) data[readPointer];
-        updPointer(readPointer);
+        T result = (T) elementData[readPointer];
+        readPointer++;
+        if (readPointer == this.initialCapacity) {
+            readPointer = 0;
+            this.isSameCycle = true;
+        }
         return result;
     }
 
@@ -85,16 +96,24 @@ public class CircularBuffer<T> {
      *
      * @return a new Object array with containing the actual elements from the buffer
      */
-    public Object[] toObjectArray() {
-        if (isSameCycle) {
-            return Arrays.copyOfRange(this.data, readPointer, writePointer);
+    public <T> Object[] toObjectArray() {
+        Object[] result;
+        if (!isEmpty()) {
+            if (isSameCycle) {
+                result = Arrays.copyOfRange(this.elementData, readPointer, writePointer);
+
+                return result;
+            } else {
+                result = new Object[this.elementData.length - (readPointer - writePointer)];
+                System.arraycopy(this.elementData, this.readPointer, result,
+                        0, this.initialCapacity - readPointer);
+                System.arraycopy(this.elementData, 0, result,
+                        this.initialCapacity - readPointer, this.writePointer);
+                return result;
+            }
         } else {
-            Object[] newArray = new Object[this.data.length - (readPointer - writePointer)];
-            System.arraycopy(this.data, this.readPointer, newArray,
-                    0, this.initialCapacity - readPointer);
-            System.arraycopy(this.data, 0, newArray,
-                    this.writePointer, this.writePointer);
-            return newArray;
+            result = new Object[0];
+            return result;
         }
     }
 
@@ -104,8 +123,13 @@ public class CircularBuffer<T> {
      * @return a new array with containing the actual elements from the buffer
      */
     @SuppressWarnings("unchecked")
-    public T[] toArray() {
-        return (T[]) toObjectArray();
+    public <T> T[] toArray(T[] arr) {
+        Object[] objects = toObjectArray();
+        int size = objects.length;
+        // Make a new array of a's runtime type, but my contents:
+        return (T[]) Arrays.copyOf(objects, size, arr.getClass());
+
+
     }
 
     /**
@@ -113,8 +137,13 @@ public class CircularBuffer<T> {
      *
      * @return a list view of the actual buffer data
      */
-    public List<T> asList() {
-        return Arrays.asList(toArray());
+    @SuppressWarnings("unchecked")
+    public <T> List<T> asList() {
+        ArrayList<T> list = new ArrayList<>();
+        for (Object item : toObjectArray()) {
+            list.add((T) item);
+        }
+        return list;
     }
 
     /**
@@ -142,7 +171,7 @@ public class CircularBuffer<T> {
     void sort(Comparator<? super T> comparator) {
         Object[] a = toObjectArray();
         Arrays.sort(a, (Comparator) comparator);
-        this.writePointer = this.readPointer;
+        this.clean();
         for (Object item : a) {
             put((T) item);
         }
@@ -162,14 +191,6 @@ public class CircularBuffer<T> {
         return (this.readPointer == this.writePointer) && !this.isSameCycle;
     }
 
-    /*update pointer*/
-    private void updPointer(int pointer) {
-        pointer++;
-        if (pointer == this.initialCapacity) {
-            pointer = 0;
-            this.isSameCycle = !this.isSameCycle;
-        }
-    }
 
     /*calculate free space in buffer*/
     private int calcFreeSpace() {
@@ -178,5 +199,49 @@ public class CircularBuffer<T> {
                 : writePointer - readPointer;
     }
 
+    /**
+     * Returns a string representation of the object. In general, the
+     * {@code toString} method returns a string that
+     * "textually represents" this object. The result should
+     * be a concise but informative representation that is easy for a
+     * person to read.
+     * It is recommended that all subclasses override this method.
+     * <p>
+     * The {@code toString} method for class {@code Object}
+     * returns a string consisting of the name of the class of which the
+     * object is an instance, the at-sign character `{@code @}', and
+     * the unsigned hexadecimal representation of the hash code of the
+     * object. In other words, this method returns a string equal to the
+     * value of:
+     * <blockquote>
+     * <pre>
+     * getClass().getName() + '@' + Integer.toHexString(hashCode())
+     * </pre></blockquote>
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        StringBuilder bufferAsString = new StringBuilder("Buffered elements: ");
+        if (isEmpty()) {
+            bufferAsString.append("empty");
+        } else {
 
+            for (Object item : this.toObjectArray()) {
+                bufferAsString.append("[" + item + "] ");
+            }
+        }
+
+        return bufferAsString.toString();
+    }
+
+    /**
+     * Clean buffer and return <tt>true</tt>.
+     *
+     * @return <tt>true</tt> when clean buffer
+     */
+    public boolean clean(){
+        this.readPointer=this.writePointer;
+        return this.isSameCycle=true;
+    }
 }
