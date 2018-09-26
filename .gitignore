@@ -3,6 +3,7 @@
 task#*/
 
 # Compiled class file #
+/out
 *.class
 
 target
