@@ -14,6 +14,11 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
 /**
  * Abstract class describes sport event
  *
@@ -21,7 +26,15 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
  * @version 1.0
  * @since 1.0
  */
+@Getter
+@Setter
 public abstract class SportEvent {
+
+    protected String eventName;
+    protected LocalDateTime startDate;
+    protected LocalDateTime endDate;
+
+
 
 
 }

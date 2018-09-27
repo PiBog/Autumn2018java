@@ -14,6 +14,9 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.domain.outcome;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * A class describes the outcome.
  *
@@ -21,5 +24,11 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.outcome;
  * @version 1.0
  * @since 1.0
  */
+@Getter
+@Setter
 public class Outcome {
+
+    private Object value;
+    private OutcomeOdd odd;
+
 }

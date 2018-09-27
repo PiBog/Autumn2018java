@@ -22,4 +22,5 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.outcome;
  * @since 1.0
  */
 public class OutcomeOdd {
+
 }

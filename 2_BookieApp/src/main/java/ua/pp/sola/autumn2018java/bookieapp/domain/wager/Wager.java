@@ -14,6 +14,9 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.domain.wager;
 
+import ua.pp.sola.autumn2018java.bookieapp.domain.outcome.OutcomeOdd;
+import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
+
 /**
  * A wager
  *
@@ -22,4 +25,13 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.wager;
  * @since 1.0
  */
 public class Wager {
+
+    private User player;
+    private OutcomeOdd odd;
+    private Integer amount;
+    private Currency currency;
+    private Long timestamp;
+    private boolean processed;
+    private boolean win;
+
 }
