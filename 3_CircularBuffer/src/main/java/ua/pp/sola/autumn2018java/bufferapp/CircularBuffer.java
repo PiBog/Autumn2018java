@@ -16,8 +16,12 @@ package ua.pp.sola.autumn2018java.bufferapp;
 
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j;
 
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * An implementation of circular buffer
@@ -27,6 +31,7 @@ import java.util.*;
  * @version 1.0
  * @since 1.0
  */
+@Log4j
 public class CircularBuffer<T> {
 
     @Getter
@@ -37,6 +42,7 @@ public class CircularBuffer<T> {
     private Object[] elementData;
     /*set True when read pointer resetted to start and set false when write pointer resetted to start*/
     private boolean isSameCycle;
+    private int modCount;
 
     /**
      * Construct new instance of buffer\
@@ -50,18 +56,18 @@ public class CircularBuffer<T> {
         this.readPointer = 0;
         this.writePointer = 0;
         isSameCycle = true;
-
+        this.modCount = 0;
     }
 
     /**
      * Write element to buffer
      *
      * @param data element that writing to buffer
-     * @throws RuntimeException if buffer is full
+     * @throws java.nio.BufferOverflowException if buffer is full
      */
     public void put(T data) {
         if (isFull()) {
-            throw new RuntimeException("Buffer is full");
+            throw new BufferOverflowException();
         }
         this.elementData[writePointer] = data;
         writePointer++;
@@ -75,12 +81,12 @@ public class CircularBuffer<T> {
      * Read next element from buffer
      *
      * @return element from buffer
-     * @throws RuntimeException if buffer is empty
+     * @throws BufferOverflowException if buffer is empty
      */
     @SuppressWarnings("unchecked")
     public T get() {
         if (isEmpty()) {
-            throw new RuntimeException("Buffer is empty");
+            throw new BufferUnderflowException();
         }
         T result = (T) elementData[readPointer];
         readPointer++;
@@ -88,6 +94,7 @@ public class CircularBuffer<T> {
             readPointer = 0;
             this.isSameCycle = true;
         }
+        this.modCount++;
         return result;
     }
 
@@ -96,7 +103,7 @@ public class CircularBuffer<T> {
      *
      * @return a new Object array with containing the actual elements from the buffer
      */
-    public <T> Object[] toObjectArray() {
+    public Object[] toObjectArray() {
         Object[] result;
         if (!isEmpty()) {
             if (isSameCycle) {
@@ -119,17 +126,34 @@ public class CircularBuffer<T> {
 
     /**
      * Get array T[] of actual elements from buffer
+     * @param arr - generic array
      *
      * @return a new array with containing the actual elements from the buffer
      */
     @SuppressWarnings("unchecked")
-    public <T> T[] toArray(T[] arr) {
+    public T[] toArray(T[] arr) {
         Object[] objects = toObjectArray();
         int size = objects.length;
         // Make a new array of a's runtime type, but my contents:
         return (T[]) Arrays.copyOf(objects, size, arr.getClass());
+    }
 
+    /**
+     * Get array T[] of actual elements from buffer
+     *
+     * @return a new array with containing the actual elements from the buffer
+     */
 
+    @SuppressWarnings("unchecked")
+    public T[] toArray() {
+        Object[] arr = toObjectArray();
+        Object[] outData = new Object[arr.length];
+        for (int i=0; i<arr.length; i++){
+            outData[i] =(T) arr[i];
+        }
+
+//    Object[] outData = this.toObjectArray();
+    return (T[])outData;
     }
 
     /**
@@ -138,7 +162,7 @@ public class CircularBuffer<T> {
      * @return a list view of the actual buffer data
      */
     @SuppressWarnings("unchecked")
-    public <T> List<T> asList() {
+    public  List<T> asList() {
         ArrayList<T> list = new ArrayList<>();
         for (Object item : toObjectArray()) {
             list.add((T) item);
@@ -150,13 +174,15 @@ public class CircularBuffer<T> {
      * Add all elements from list to buffer if enough space otherwise throw exception
      *
      * @param toAdd list with elements of T class
-     * @throws RuntimeException if buffer has not enough space for write all data from list
+     * @throws BufferOverflowException if buffer has not enough space for write all data from list
      */
     public void addAll(List<? extends T> toAdd) {
-        if (toAdd.size() > calcFreeSpace()) throw new RuntimeException("Not enough space");
+        if (toAdd.size() > calcFreeSpace()) throw new BufferOverflowException();
+        log.info(toAdd.size() + ">" + calcFreeSpace());
         for (T item : toAdd) {
             put(item);
         }
+
     }
 
     /**
@@ -191,12 +217,19 @@ public class CircularBuffer<T> {
         return (this.readPointer == this.writePointer) && !this.isSameCycle;
     }
 
+    public int size(){
+        return this.initialCapacity-this.calcFreeSpace();
+    }
+
+    public int maxSize(){
+        return this.initialCapacity;
+    }
 
     /*calculate free space in buffer*/
     private int calcFreeSpace() {
         return (isSameCycle)
                 ? initialCapacity - (writePointer - readPointer)
-                : writePointer - readPointer;
+                :  readPointer - writePointer;
     }
 
     /**
@@ -227,7 +260,7 @@ public class CircularBuffer<T> {
             bufferAsString.append("empty");
         } else {
 
-            for (Object item : this.toObjectArray()) {
+            for (Object item : this.toArray()) {
                 bufferAsString.append("[" + item + "] ");
             }
         }
@@ -240,8 +273,65 @@ public class CircularBuffer<T> {
      *
      * @return <tt>true</tt> when clean buffer
      */
-    public boolean clean(){
+    public void clean(){
         this.readPointer=this.writePointer;
-        return this.isSameCycle=true;
+        this.isSameCycle=true;
+
+    }
+
+    public Iterator<T> iterator() {
+        return new Itr();
+    }
+
+    /**
+     * An optimized version of AbstractList.Itr
+     */
+    private class Itr implements Iterator<T> {
+        int cursor;       // index of next element to return
+        int lastRet = -1; // index of last element returned; -1 if no such
+        int expectedModCount = modCount;
+
+        public boolean hasNext() {
+            return cursor != size();
+        }
+
+        @SuppressWarnings("unchecked")
+        public T next() {
+            checkForComodification();
+            int i = cursor;
+            if (i >= size())
+                throw new NoSuchElementException();
+            Object[] elementData = CircularBuffer.this.toObjectArray();
+            if (i >= elementData.length)
+                throw new ConcurrentModificationException();
+            cursor = i + 1;
+            return (T) elementData[lastRet = i];
+        }
+
+        @SuppressWarnings("unchecked")
+        public void forEachRemaining(Consumer<? super T> consumer) {
+            Objects.requireNonNull(consumer);
+            final int size = CircularBuffer.this.size();
+            int i = cursor;
+            if (i >= size) {
+                return;
+            }
+            final Object[] elementData = CircularBuffer.this.toObjectArray();
+            if (i >= elementData.length) {
+                throw new ConcurrentModificationException();
+            }
+            while (i != size && modCount == expectedModCount) {
+                consumer.accept((T) elementData[i++]);
+            }
+            // update once at end of iteration to reduce heap write traffic
+            cursor = i;
+            lastRet = i - 1;
+            checkForComodification();
+        }
+
+        final void checkForComodification() {
+            if (modCount != expectedModCount)
+                throw new ConcurrentModificationException();
+        }
     }
 }

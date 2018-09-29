@@ -80,6 +80,7 @@ public class BufferApp {
         log.info("wr:" + buffer.getWritePointer() + "/rd:" + buffer.getReadPointer());
 
 
+
         log.info("-------------");
         log.info("5. Try write 11 elements and overload buffer");
         log.info("Before -> " + buffer.toString());
