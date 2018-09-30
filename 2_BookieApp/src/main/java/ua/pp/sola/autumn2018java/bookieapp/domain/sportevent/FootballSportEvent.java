@@ -14,6 +14,9 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * A football game
  *
@@ -21,5 +24,7 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
  * @version 1.0
  * @since 1.0
  */
+@Getter
+@Setter
 public class FootballSportEvent extends SportEvent {
 }

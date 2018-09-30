@@ -14,6 +14,10 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.domain.user;
 
+import ua.pp.sola.autumn2018java.bookieapp.domain.wager.Currency;
+
+import java.time.LocalDateTime;
+
 /**
  * A player
  *
@@ -21,5 +25,9 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.user;
  * @version 1.0
  * @since 1.0
  */
-public class Player {
+public class Player extends User {
+    private int accountNumber;
+    private int Balance;
+    private Currency currency;
+    private LocalDateTime dateOfBirth;
 }
