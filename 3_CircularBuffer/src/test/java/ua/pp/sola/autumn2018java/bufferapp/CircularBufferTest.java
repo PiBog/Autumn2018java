@@ -78,6 +78,14 @@ public class CircularBufferTest {
     }
 
     @Test
+    public void testToArrayWithInst() {
+        buffer.put(1);
+        buffer.put(2);
+        Integer[] arr = buffer.toArray(new Integer[0]);
+        assertEquals("[1, 2]", Arrays.toString(buffer.toArray()));
+    }
+
+    @Test
     public void testAsList() {
         buffer.put(1);
         buffer.get();
