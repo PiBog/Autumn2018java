@@ -25,12 +25,11 @@ import lombok.Getter;
  */
 @Getter
 public enum Outcome {
-    FIRST("1", "team #1 won: "), SECOND("1", "team #2 won: "), DRAW("X", "draw: ");
+    FIRST("team #1 won: "), SECOND("team #2 won: "), DRAW("draw: ");
 
     String describe;
-    String mark;
 
-    Outcome(String mark, String describe) {
+    Outcome( String describe) {
         this.describe = describe;
     }
 

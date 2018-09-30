@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
 
 
 /**
- * A class represents the result of a roundNumber.
+ * A class represents the result of an one round.
  *
  * @author Bohdan Pysarenko
  * @version 1.0
@@ -39,8 +40,8 @@ public class Round {
     private List<Hit> hitList;
     private List<Outcome> gameResult;
 
-    private Round(int year, int week, String roundNumber, LocalDate date,
-                  List<Hit> hitList, List<Outcome> gameResult) {
+    public Round(int year, int week, String roundNumber, LocalDate date,
+                 List<Hit> hitList, List<Outcome> gameResult) {
         this.year = year;
         this.week = week;
         this.roundNumber = roundNumber;
@@ -49,61 +50,56 @@ public class Round {
         this.gameResult = gameResult;
     }
 
-    public static Round instanceOf(String line) {
-
-        List<String> splitLine = Stream.of(line.split(";")).map(String::new)
-                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-
-        int tmpYear = Integer.parseInt(splitLine.get(0));
-        int tmpWeek = Integer.parseInt(splitLine.get(1));
-        String tmpRound = splitLine.get(2);
-
-        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
-        LocalDate tmpDate = (splitLine.get(3).isEmpty()) ? null : LocalDate.parse(splitLine.get(3), pattern);
-
-        List<Hit> tmpHitList = new ArrayList<>();
-        for (int i = 4, j = 14; i < 14; i += 2, j--) {
-            tmpHitList.add(Hit.instanceOf(j, splitLine.get(i), splitLine.get(i + 1)));
-        }
-
-        List<Outcome> tmpGameResult = new ArrayList<>();
-        for (int i = 14; i < 28; i++) {
-            tmpGameResult.add(Outcome.getOutcome(splitLine.get(i)));
-        }
-
-        return new Round(tmpYear, tmpWeek, tmpRound, tmpDate, tmpHitList, tmpGameResult);
-    }
-
+    /**
+     *  Method returns max prize from round
+     *  @return max prize or 0 if nothing was founded
+     */
     public int getMaxPrize() {
 
-        Optional<Hit> maxPrizeHit =  hitList.stream().max(Comparator.comparing(Hit::getPrize));
-        maxPrizeHit.ifPresent(hit -> {});//.getPrize();
+        Optional<Hit> maxPrizeHit = hitList.stream().max(Comparator.comparing(Hit::getPrize));
 
-        return 0;
+        return maxPrizeHit.map(Hit::getPrize).orElse(0);
     }
 
-    public String getHappyDay() {
+    /**
+     * Method returns string with date of round and max prize
+     */
+    public String getMaxPrizeInfoAsString(){
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator(' ');
+        String prize = new DecimalFormat("#,### UAH", symbols).format(this.getMaxPrize());
+        return ("" + this.getDayAsString() + " was won max PRIZE: " + prize);
+    }
+
+    /**
+     * Method returns date of round as string
+     *
+     * @return string with date of round
+     */
+
+    public String getDayAsString() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         return date.format(formatter);
     }
 
-
-    public void showDistribution() {
+/**
+ * Method returns string with distribution of result weighted by winner number
+ * @return string with the distribution of the 1/2/X results
+ */
+    public String getDistributionInfo() {
         DecimalFormat formatter = new DecimalFormat("00.00%', '");
         StringBuilder result = new StringBuilder();
 
         Map<Outcome, Long> resultMap = gameResult.stream()
                 .collect(Collectors.groupingBy(Outcome::getMe, Collectors.counting()));
 
-        Arrays.asList(Outcome.FIRST, Outcome.SECOND, Outcome.DRAW).stream()
-                .forEach(x -> result
-                        .append(x.getDescribe()
-                                + formatter.format(
-                                ((double) Optional
-                                        .ofNullable(resultMap.get(x))
-                                        .orElse(0l) / gameResult.size()))));
+        Stream.of(Outcome.FIRST, Outcome.SECOND, Outcome.DRAW)
+                .forEach(x -> result.append(x.getDescribe())
+                        .append(formatter.format(((double) Optional
+                                .ofNullable(resultMap.get(x))
+                                .orElse(0L) / gameResult.size()))));
 
-        System.out.println(result.toString());
+        return (result.toString());
     }
 }

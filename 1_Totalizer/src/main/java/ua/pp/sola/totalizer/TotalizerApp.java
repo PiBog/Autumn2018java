@@ -15,15 +15,12 @@
 package ua.pp.sola.totalizer;
 
 import lombok.extern.java.Log;
-import ua.pp.sola.totalizer.domain.Round;
-import ua.pp.sola.totalizer.service.TotalizerService;
+import ua.pp.sola.totalizer.service.InstancesService;
+import ua.pp.sola.totalizer.service.UIService;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -44,22 +41,10 @@ public class TotalizerApp {
         File file = new File(argss);
         List<String> fileAsList =  Files.readAllLines(Paths.get(file.getPath()));
 
-        List<Round> roundList = fileAsList.stream().map(Round::instanceOf)
-                .collect(LinkedList::new,LinkedList::add,LinkedList::addAll);
+        UIService uiService = new UIService(new InstancesService(fileAsList));
+        uiService.start();
 
 
-        TotalizerService service = new TotalizerService();
-
-        System.out.println(service.getMaxPrizeFromList(roundList));
-        service.printDistribution(roundList);
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Please enter date (yyyy.mm.dd):");
-        String date = reader.readLine();
-        System.out.println("Enter outcomes (1/2/X)(14 numbers):");
-        String outcomes = reader.readLine();
-        System.out.println("Lets play");
-        service.calculateDistribution(date,outcomes,roundList);
 
     }
 

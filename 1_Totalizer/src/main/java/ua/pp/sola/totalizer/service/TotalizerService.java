@@ -14,6 +14,7 @@
  */
 package ua.pp.sola.totalizer.service;
 
+import ua.pp.sola.totalizer.domain.Hit;
 import ua.pp.sola.totalizer.domain.Outcome;
 import ua.pp.sola.totalizer.domain.Round;
 
@@ -21,6 +22,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 /**
@@ -32,58 +34,94 @@ import java.util.*;
  */
 public class TotalizerService {
 
-        public String getMaxPrizeFromList(List<Round> roundList) {
 
-        Round maxRound = roundList.stream().parallel()
-                .max(Comparator.comparing(Round::getMaxPrize)).get();
+    /**
+     * Method print info about max prize in list of round
+     */
+    public static String getMaxPrizeFromRoundList(List<Round> roundList) {
 
-        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
-        symbols.setGroupingSeparator(' ');
-        return ("" + maxRound.getHappyDay() + " was won max PRIZE: " +
-                new DecimalFormat("#,### UAH", symbols).format(maxRound.getMaxPrize()));
+        Optional<Round> searchResult = roundList.stream().parallel()
+                .max(Comparator.comparing(Round::getMaxPrize));
+
+        return searchResult
+                .map(Round::getMaxPrizeInfoAsString)
+                .orElse("Something went wrong!!!");
     }
 
-    public void printDistribution(List<Round> roundList) {
-
-        roundList.stream().parallel().forEach(Round::showDistribution);
-
-
-    }
-
-    public void calculateDistribution(String date, String outcomes, List<Round> list) {
-
+    /**
+     * Validate date and return as LocalDate
+     */
+    public static LocalDate validateDate(String stringDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        LocalDate resultDate = LocalDate.parse(date, formatter);
+        LocalDate date;
 
-        Round round = list.stream().parallel()
-                .filter(x -> x.getDate().equals(resultDate))
-                .findFirst().get();
+        try {
+            date = LocalDate.parse(stringDate, formatter);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+        return date;
+    }
 
-        char[] chars = outcomes.toCharArray();
-        List<Outcome> pattern = round.getGameResult();
+    /**
+     * Method find and return round from list by date
+     *
+     * @return round
+     */
+    public static Round findRoundByDate(LocalDate date, List<Round> list) {
+
+
+        return list.stream()
+                .filter(x -> x.getDate() != null && x.getDate().equals(date))
+                .findFirst().orElse(null);
+    }
+
+    /**
+     * Method compare user outcomes with sample
+     *
+     * @param result user outcome
+     * @param round  with valid sample
+     * @return number of coincidences or -1 if input data invalid
+     */
+    public static int compareOutcomes(String result, Round round) {
         int hits = 0;
-
-        for (int i = 0; i < pattern.size(); i++) {
-            Outcome current = Outcome.getOutcome(String.valueOf(chars[i]));
-            if (current.equals(pattern.get(i))) {
-                hits++;
+        char[] chars = result.toCharArray();
+        if (chars.length != 14) return -1;
+        else {
+            List<Outcome> pattern = round.getGameResult();
+            for (int i = 0; i < pattern.size(); i++) {
+                Outcome current = Outcome.getOutcome(String.valueOf(chars[i]));
+                if (current == null) {
+                    return -1;
+                } else if (current.equals(pattern.get(i))) {
+                    hits++;
+                }
             }
-
-
         }
 
-        final int lambda = hits;
+        return hits;
+    }
 
+    /**
+     * Display on screen result of the user's try
+     *
+     * @param round round for comparing
+     * @param hits  number of the user's valid hits
+     */
+
+    public static String resultToString(final Round round, final int hits) {
         int amount = (hits < 10)
                 ? 0
                 : round.getHitList()
-                .stream().filter(x -> lambda == x.getHits())
-                .findFirst().get().getPrize();
+                .stream().filter(x -> hits == x.getHits())
+                .findFirst().orElse(new Hit(0, 0, 0)).getPrize();
 
         DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
         symbols.setGroupingSeparator(' ');
-        System.out.println("Result: hits: " + hits + ", amount: "
+        return ("Result: hits: " + hits + ", amount: "
                 + new DecimalFormat("#,### UAH").format(amount));
     }
+
+
 }
 
