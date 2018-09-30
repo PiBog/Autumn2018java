@@ -14,6 +14,9 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp;
 
+import ua.pp.sola.autumn2018java.bookieapp.domain.sportevent.FootballSportEvent;
+import ua.pp.sola.autumn2018java.bookieapp.domain.sportevent.SportEvent;
+
 /**
  * Class is entry point for the application, controls the application flow,
  * uses services and domain classes.
@@ -25,6 +28,11 @@ package ua.pp.sola.autumn2018java.bookieapp;
 public class BookieApp {
 
     public static void main(String[] args) {
+
+        SportEvent soccer = new FootballSportEvent("Southampton v Bournemoth"
+                ,"27 Oct 2016 19:00"
+                ,"27 Oct 2016 21:00");
+
 
     }
 }

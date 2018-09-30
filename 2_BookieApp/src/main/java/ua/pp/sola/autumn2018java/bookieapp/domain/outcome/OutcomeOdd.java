@@ -14,6 +14,11 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.domain.outcome;
 
+import lombok.Getter;
+import ua.pp.sola.autumn2018java.bookieapp.service.DataService;
+
+import java.time.LocalDateTime;
+
 /**
  * A class
  *
@@ -21,6 +26,18 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.outcome;
  * @version 1.0
  * @since 1.0
  */
+@Getter
 public class OutcomeOdd {
+
+    int odd;
+    LocalDateTime dateFrom;
+    LocalDateTime dateTo;
+
+    public OutcomeOdd(int value, String from, String to){
+        this.odd=value;
+        this.dateFrom = DataService.dateParser(from);
+        this.dateTo = DataService.dateParser(to);
+    }
+
 
 }

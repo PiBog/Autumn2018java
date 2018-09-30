@@ -12,24 +12,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.domain.bet;
+package ua.pp.sola.autumn2018java.bookieapp.service;
 
-import ua.pp.sola.autumn2018java.bookieapp.domain.outcome.Outcome;
-import ua.pp.sola.autumn2018java.bookieapp.domain.sportevent.SportEvent;
-
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
- * Class describes a bet
+ * An implementation of
  *
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-public class Bet {
-    private SportEvent event;
-    private String description;
-    private List<Outcome> outcomeList;
-    private BetType type;
+public class DataService {
 
+    public static LocalDateTime dateParser(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+        return  LocalDateTime.parse(date, formatter);
+    }
 }

@@ -1,6 +1,7 @@
 # task folders #
 
 task#*/
+out/
 
 # Compiled class file #
 *.class

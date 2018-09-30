@@ -16,9 +16,11 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
 
 import lombok.Getter;
 import lombok.Setter;
+import ua.pp.sola.autumn2018java.bookieapp.service.DataService;
+
 
 /**
- * A football game
+ * A football game event
  *
  * @author Bohdan Pysarenko
  * @version 1.0
@@ -27,4 +29,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FootballSportEvent extends SportEvent {
+
+    public FootballSportEvent(String name, String start, String end) {
+        this.eventName = name;
+        this.startDate = DataService.dateParser(start);
+        this.endDate = DataService.dateParser(start);
+    }
 }
