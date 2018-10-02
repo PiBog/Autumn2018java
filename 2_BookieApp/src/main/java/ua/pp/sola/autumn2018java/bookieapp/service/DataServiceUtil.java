@@ -12,32 +12,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.domain.outcome;
-
-import lombok.Getter;
-import ua.pp.sola.autumn2018java.bookieapp.service.DataServiceUtil;
+package ua.pp.sola.autumn2018java.bookieapp.service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
- * A class
+ * An implementation of
  *
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-@Getter
-public class OutcomeOdd {
-
-    int odd;
-    LocalDateTime dateFrom;
-    LocalDateTime dateTo;
-
-    public OutcomeOdd(int value, String from, String to){
-        this.odd=value;
-        this.dateFrom = DataServiceUtil.dateParser(from);
-        this.dateTo = DataServiceUtil.dateParser(to);
+public class DataServiceUtil {
+    private DataServiceUtil(){
+        throw new UnsupportedOperationException("A class instance can't be created.");
     }
 
-
+    public static LocalDateTime dateParser(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+        return  LocalDateTime.parse(date, formatter);
+    }
 }

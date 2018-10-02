@@ -14,6 +14,7 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.domain.wager;
 
+import lombok.Builder;
 import ua.pp.sola.autumn2018java.bookieapp.domain.outcome.OutcomeOdd;
 import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
 
@@ -24,6 +25,7 @@ import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
  * @version 1.0
  * @since 1.0
  */
+@Builder
 public class Wager {
 
     private User player;
@@ -33,5 +35,6 @@ public class Wager {
     private Long timestamp;
     private boolean processed;
     private boolean win;
+
 
 }

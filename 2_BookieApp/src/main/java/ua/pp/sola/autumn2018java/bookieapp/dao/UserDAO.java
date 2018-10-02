@@ -12,22 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.service;
+package ua.pp.sola.autumn2018java.bookieapp.dao;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
 
 /**
- * An implementation of
+ * DAO interface for User object
  *
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-public class DataService {
+public interface UserDAO {
+    /**
+     * Get user data from storage
+     *
+     * @param username user's name
+     * @param account number of user's account
+     * @return user object if user exist otherwise return -1
+     */
+    User getUser(String username, int account);
 
-    public static LocalDateTime dateParser(String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-        return  LocalDateTime.parse(date, formatter);
-    }
+    User addUser(String name, int account, int balance, String curr, String dateOfBorn);
+
+    int getUserBalance(int account);
+
+    void updUserBalance(int account, int newBalance);
 }

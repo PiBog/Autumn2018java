@@ -15,13 +15,42 @@
 package ua.pp.sola.autumn2018java.bookieapp.domain.wager;
 
 /**
- * An implementation of
+ * An implementation of currency
  *
- * @param
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
 public enum Currency {
-    EUR,USD,HUF
+    EUR("EUR"), USD("USD"), HUF("HUF");
+    private String description;
+
+    Currency(String value) {
+        this.description = value;
+    }
+
+
+    public static Currency getEnum(String str) {
+        for (Currency demoType : Currency.values()) {
+            if (demoType.toString().equals(str)) {
+                return demoType;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the name of this enum constant, as contained in the
+     * declaration.  This method may be overridden, though it typically
+     * isn't necessary or desirable.  An enum type should override this
+     * method when a more "programmer-friendly" string form exists.
+     *
+     * @return the name of this enum constant
+     */
+    @Override
+    public String toString() {
+        return description;
+    }
+
+
 }

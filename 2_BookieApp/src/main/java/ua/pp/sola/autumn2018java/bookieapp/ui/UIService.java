@@ -12,32 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.domain.outcome;
-
-import lombok.Getter;
-import ua.pp.sola.autumn2018java.bookieapp.service.DataServiceUtil;
-
-import java.time.LocalDateTime;
+package ua.pp.sola.autumn2018java.bookieapp.ui;
 
 /**
- * A class
+ * An implementation of user interface
  *
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-@Getter
-public class OutcomeOdd {
-
-    int odd;
-    LocalDateTime dateFrom;
-    LocalDateTime dateTo;
-
-    public OutcomeOdd(int value, String from, String to){
-        this.odd=value;
-        this.dateFrom = DataServiceUtil.dateParser(from);
-        this.dateTo = DataServiceUtil.dateParser(to);
-    }
+public class UIService {
 
 
 }

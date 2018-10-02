@@ -16,6 +16,7 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
 
 import lombok.Getter;
 import lombok.Setter;
+import ua.pp.sola.autumn2018java.bookieapp.service.DataServiceUtil;
 
 /**
  * A tennis game
@@ -27,4 +28,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TennisSportEvent extends SportEvent {
+    public TennisSportEvent(String name, String start, String end) {
+        this.eventName = name;
+        this.startDate = DataServiceUtil.dateParser(start);
+        this.endDate = DataServiceUtil.dateParser(end);
+    }
 }
