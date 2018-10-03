@@ -13,6 +13,7 @@
         <module>1_Totalizer</module>
         <module>2_BookieApp</module>
         <module>3_CircularBuffer</module>
+        <module>4_LambdaCalc</module>
     </modules>
 
     <packaging>pom</packaging>
