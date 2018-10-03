@@ -17,7 +17,7 @@ package ua.pp.sola.autumn2018java.bookieapp.dao;
 import ua.pp.sola.autumn2018java.bookieapp.domain.user.Player;
 import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
 import ua.pp.sola.autumn2018java.bookieapp.domain.wager.Currency;
-import ua.pp.sola.autumn2018java.bookieapp.service.DataServiceUtil;
+import ua.pp.sola.autumn2018java.bookieapp.service.DateUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +32,10 @@ import java.util.Map;
 public class Storage implements UserDAO, BetDAO {
 
     private Map<Integer, User> userStorage = new HashMap<>();
+
+    public Storage(){
+
+    }
 
     /**
      * Get user data from storage
@@ -53,7 +57,7 @@ public class Storage implements UserDAO, BetDAO {
                 .accountNumber(account)
                 .balance(balance)
                 .currency(Currency.getEnum(curr))
-                .dateOfBirth(DataServiceUtil.dateParser(dateOfBorn))
+                .dateOfBirth(DateUtil.dateParser(dateOfBorn))
                 .build();
         userStorage.put(account, player);
         return player;

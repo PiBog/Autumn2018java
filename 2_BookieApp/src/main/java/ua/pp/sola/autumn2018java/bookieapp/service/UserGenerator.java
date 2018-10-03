@@ -12,25 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
+package ua.pp.sola.autumn2018java.bookieapp.service;
 
-import lombok.Getter;
-import lombok.Setter;
-import ua.pp.sola.autumn2018java.bookieapp.service.DateUtil;
 
 /**
- * A tennis game
+ * Add several users after initialize
  *
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-@Getter
-@Setter
-public class TennisSportEvent extends SportEvent {
-    public TennisSportEvent(String name, String start, String end) {
-        this.eventName = name;
-        this.startDate = DateUtil.dateParser(start);
-        this.endDate = DateUtil.dateParser(end);
+public final class UserGenerator {
+
+    private UserGenerator() {
     }
+
+
 }

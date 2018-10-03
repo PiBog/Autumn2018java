@@ -24,8 +24,8 @@ import java.time.format.DateTimeFormatter;
  * @version 1.0
  * @since 1.0
  */
-public class DataServiceUtil {
-    private DataServiceUtil(){
+public class DateUtil {
+    private DateUtil(){
         throw new UnsupportedOperationException("A class instance can't be created.");
     }
 
