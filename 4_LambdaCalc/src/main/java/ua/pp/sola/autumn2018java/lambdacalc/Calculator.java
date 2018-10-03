@@ -1,6 +1,6 @@
 package ua.pp.sola.autumn2018java.lambdacalc;
 
-tttttimport java.io.BufferedReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
