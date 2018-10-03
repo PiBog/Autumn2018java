@@ -12,25 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
+package ua.pp.sola.autumn2018java.bookieapp.dao;
 
-import lombok.Getter;
-import lombok.Setter;
-import ua.pp.sola.autumn2018java.bookieapp.service.DateUtil;
+import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
 
 /**
- * A tennis game
+ * DAO interface for User object
  *
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-@Getter
-@Setter
-public class TennisSportEvent extends SportEvent {
-    public TennisSportEvent(String name, String start, String end) {
-        this.eventName = name;
-        this.startDate = DateUtil.dateParser(start);
-        this.endDate = DateUtil.dateParser(end);
-    }
+public interface UserDAO {
+    /**
+     * Get user data from storage
+     *
+     * @param username user's name
+     * @param account number of user's account
+     * @return user object if user exist otherwise return -1
+     */
+    User getUser(String username, int account);
+
+    User addUser(String name, int account, int balance, String curr, String dateOfBorn);
+
+    int getUserBalance(int account);
+
+    void updUserBalance(int account, int newBalance);
 }

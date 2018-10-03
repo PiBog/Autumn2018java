@@ -16,6 +16,7 @@ package ua.pp.sola.autumn2018java.bookieapp;
 
 import ua.pp.sola.autumn2018java.bookieapp.domain.sportevent.FootballSportEvent;
 import ua.pp.sola.autumn2018java.bookieapp.domain.sportevent.SportEvent;
+import ua.pp.sola.autumn2018java.bookieapp.ui.UIService;
 
 /**
  * Class is entry point for the application, controls the application flow,
@@ -33,6 +34,7 @@ public class BookieApp {
                 ,"27 Oct 2016 19:00"
                 ,"27 Oct 2016 21:00");
 
-
+        UIService ui = new UIService();
+        ui.run();
     }
 }

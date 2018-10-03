@@ -16,7 +16,7 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
 
 import lombok.Getter;
 import lombok.Setter;
-import ua.pp.sola.autumn2018java.bookieapp.service.DataService;
+import ua.pp.sola.autumn2018java.bookieapp.service.DateUtil;
 
 
 /**
@@ -32,7 +32,7 @@ public class FootballSportEvent extends SportEvent {
 
     public FootballSportEvent(String name, String start, String end) {
         this.eventName = name;
-        this.startDate = DataService.dateParser(start);
-        this.endDate = DataService.dateParser(start);
+        this.startDate = DateUtil.dateParser(start);
+        this.endDate = DateUtil.dateParser(end);
     }
 }

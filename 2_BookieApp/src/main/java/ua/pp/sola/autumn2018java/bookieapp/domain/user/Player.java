@@ -14,20 +14,34 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.domain.user;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import ua.pp.sola.autumn2018java.bookieapp.domain.wager.Currency;
 
 import java.time.LocalDateTime;
 
 /**
- * A player
+ * A player POJO
  *
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
+@Getter
+@Setter
+@Builder
 public class Player extends User {
     private int accountNumber;
-    private int Balance;
+    private int balance;
     private Currency currency;
     private LocalDateTime dateOfBirth;
+
+    public Player(String username, int accountNumber, int balance, Currency currency, LocalDateTime dateOfBirth) {
+        this.username = username;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.currency = currency;
+        this.dateOfBirth = dateOfBirth;
+    }
 }

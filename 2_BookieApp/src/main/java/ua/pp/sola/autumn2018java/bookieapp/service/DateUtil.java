@@ -24,7 +24,10 @@ import java.time.format.DateTimeFormatter;
  * @version 1.0
  * @since 1.0
  */
-public class DataService {
+public class DateUtil {
+    private DateUtil(){
+        throw new UnsupportedOperationException("A class instance can't be created.");
+    }
 
     public static LocalDateTime dateParser(String date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
