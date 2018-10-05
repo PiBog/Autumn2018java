@@ -3,6 +3,7 @@ package ua.pp.sola.autumn2018java.lambdacalc;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -16,7 +17,7 @@ public class Calculator {
 
     public static void main(String[] args) throws IOException {
 
-        printToConsole("Enter an expression: ", System.out::println);
+//        printString("Enter an expression: ", System.out::println);
 
 
         String line = new BufferedReader(new InputStreamReader(System.in)).readLine();
@@ -24,37 +25,47 @@ public class Calculator {
         String[] numbers = splitLine(line, MATH_OPERATORS_PATERN, String::split);
 
 
-        printToConsole(line,
-                System.out::println);
-
-        print(operations,
-                Arrays::toString,
-                System.out::println);
-
-        print(numbers,
-                Arrays::toString,
-                System.out::println);
+//        printString(line, System.out::println);
+//
+//        print(operations, Arrays::toString, System.out::println);
+//
+//        print(numbers, Arrays::toString, System.out::println);
 
 
-        printInt(convert(numbers),
-                Arrays::toString,
-                System.out::println);
-
-
-        printResultToConsole(operations,
-                numbers,
-                Calculator::convert,
-                Calculator::calculate,
-                System.out::println);
-
-        line = new BufferedReader(new InputStreamReader(System.in)).readLine();
-        /*calculate and print with one method*/
-        printResultToConsole(
+        int result = getResult(
                 splitLine(line, NUNBERS_PATERN, String::split),
                 splitLine(line, MATH_OPERATORS_PATERN, String::split),
                 Calculator::convert,
-                Calculator::calculate,
-                System.out::println);
+                Calculator::calculate);
+
+        printResult(String::valueOf,System.out::println, result);
+    }
+
+
+    public static String[] splitLine(String source,
+                                     String pattern,
+                                     BiFunction<String, String, String[]> biFunction) {
+        return biFunction.apply(source, pattern);
+    }
+
+    public static int getResult(String[] operations,
+                                String[] numbers,
+                                Function<String[], int[]> function,
+                                BiFunction<String[], int[], Integer> biFunction) {
+
+        return biFunction.apply(
+                operations, function.apply(numbers)
+        );
+    }
+
+    public static void printString(String source,
+                                   Consumer<String> consumer) {
+        consumer.accept(source);
+    }
+
+    public static void printResult(Function<Integer, String> function, Consumer<String> consumer, int arr) {
+        consumer.accept(
+                function.apply(arr));
     }
 
     private static void print(Object[] arr,
@@ -63,36 +74,6 @@ public class Calculator {
         consumer.accept(
                 function.apply(arr)
         );
-    }
-    private static void printInt(int[] arr,
-                              Function<int[], String> function,
-                              Consumer<String> consumer) {
-        consumer.accept(
-                function.apply(arr)
-        );
-    }
-
-    private static void printResultToConsole(String[] operations,
-                                             String[] numbers,
-                                             Function<String[], int[]> function,
-                                             BiFunction<String[], int[], Integer> biFunction,
-                                             Consumer<Integer> consumer) {
-        consumer.accept(
-                biFunction.apply(
-                        operations, function.apply(numbers)
-                )
-        );
-    }
-
-    private static void printToConsole(String source,
-                                       Consumer<String> consumer) {
-        consumer.accept(source);
-    }
-
-    private static String[] splitLine(String source,
-                                      String pattern,
-                                      BiFunction<String, String, String[]> biFunction) {
-        return biFunction.apply(source, pattern);
     }
 
 
