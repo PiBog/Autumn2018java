@@ -12,16 +12,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.domain.user;
+package ua.pp.sola.autumn2018java.bookieapp.util;
+
+import ua.pp.sola.autumn2018java.bookieapp.domain.bet.Bet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * An abstract class of user
+ * An implementation of
  *
+ * @param
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-public abstract class User {
-    protected boolean isEnabled;
-    protected String username;
+public final class BetSupplier {
+
+    private BetSupplier() {
+        throw new UnsupportedOperationException("A class instance can't be created.");
+
+    }
+
+    public static List<Bet> generateBetList() {
+        List<Bet> list = new ArrayList<>();
+        return list;
+    }
+
+    public static int generateWinBet(List<Bet> allList){
+        return (int) Math.random()*137/allList.size();
+    }
 }

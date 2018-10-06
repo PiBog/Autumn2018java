@@ -16,7 +16,7 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.wager;
 
 import lombok.Builder;
 import ua.pp.sola.autumn2018java.bookieapp.domain.outcome.OutcomeOdd;
-import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
+import ua.pp.sola.autumn2018java.bookieapp.domain.user.Player;
 
 /**
  * A wager
@@ -28,7 +28,7 @@ import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
 @Builder
 public class Wager {
 
-    private User player;
+    private Player player;
     private OutcomeOdd odd;
     private Integer amount;
     private Currency currency;

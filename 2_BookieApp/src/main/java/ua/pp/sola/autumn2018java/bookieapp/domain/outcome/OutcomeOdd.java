@@ -15,7 +15,7 @@
 package ua.pp.sola.autumn2018java.bookieapp.domain.outcome;
 
 import lombok.Getter;
-import ua.pp.sola.autumn2018java.bookieapp.service.DateUtil;
+import ua.pp.sola.autumn2018java.bookieapp.util.DateUtil;
 
 import java.time.LocalDateTime;
 

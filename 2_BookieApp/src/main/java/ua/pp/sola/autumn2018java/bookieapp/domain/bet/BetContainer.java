@@ -12,37 +12,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
+package ua.pp.sola.autumn2018java.bookieapp.domain.bet;
 
-import javafx.scene.web.WebHistory;
-import lombok.Getter;
-import lombok.Setter;
-import ua.pp.sola.autumn2018java.bookieapp.domain.bet.Bet;
 import ua.pp.sola.autumn2018java.bookieapp.util.BetSupplier;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contain result of event
+ * An implementation of
  *
+ * @param
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-@Getter
-@Setter
-public class Result {
+public class BetContainer {
 
-    private List<Bet> results;
+    private List<Bet> allBets;
+    private List<PlacedBet> activeBet;
 
-    public Result(List<Bet> allList) {
-        int betQuantity = BetSupplier.generateWinBet(allList)/2;
-        int counter = 0;
-        do {
-            int winBetNumber = BetSupplier.generateWinBet(allList);
+    public BetContainer() {
+        this.activeBet = new ArrayList<>();
+        createBets();
+    }
 
-            counter++;
-        } while (counter<3);
+    public void showBetList(){
+        for (int i =0;i<allBets.size(); i++){
+            System.out.println(1+":"+allBets.get(i).toString());
+        }
+    }
 
+    public void placeBet(int i, int sum){
+        activeBet.add(new PlacedBet(allBets.get(i),sum));
+    }
+
+    public void createBets(){
+        this.allBets = BetSupplier.generateBetList();
+    }
+
+    public int betQuantity() {
+        return allBets.size();
     }
 }

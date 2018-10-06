@@ -16,7 +16,7 @@ package ua.pp.sola.autumn2018java.bookieapp.domain.sportevent;
 
 import lombok.Getter;
 import lombok.Setter;
-import ua.pp.sola.autumn2018java.bookieapp.service.DateUtil;
+import ua.pp.sola.autumn2018java.bookieapp.util.DateUtil;
 
 
 /**

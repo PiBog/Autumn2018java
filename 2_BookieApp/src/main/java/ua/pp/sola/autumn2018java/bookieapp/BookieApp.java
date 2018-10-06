@@ -30,10 +30,6 @@ public class BookieApp {
 
     public static void main(String[] args) {
 
-        SportEvent soccer = new FootballSportEvent("Southampton v Bournemoth"
-                ,"27 Oct 2016 19:00"
-                ,"27 Oct 2016 21:00");
-
         UIService ui = new UIService();
         ui.run();
     }

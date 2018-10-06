@@ -12,20 +12,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.service;
+package ua.pp.sola.autumn2018java.bookieapp.util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
- * Add several users after initialize
+ * An implementation of
  *
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-public final class UserGenerator {
-
-    private UserGenerator() {
+public class DateUtil {
+    private DateUtil(){
+        throw new UnsupportedOperationException("A class instance can't be created.");
     }
 
-
+    public static LocalDateTime dateParser(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+        return  LocalDateTime.parse(date, formatter);
+    }
 }

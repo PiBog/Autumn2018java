@@ -15,9 +15,7 @@
 package ua.pp.sola.autumn2018java.bookieapp.dao;
 
 import ua.pp.sola.autumn2018java.bookieapp.domain.user.Player;
-import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
 import ua.pp.sola.autumn2018java.bookieapp.domain.wager.Currency;
-import ua.pp.sola.autumn2018java.bookieapp.service.DateUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +27,11 @@ import java.util.Map;
  * @version 1.0
  * @since 1.0
  */
-public class Storage implements UserDAO, BetDAO {
+public class Storage implements UserDAO {
 
-    private Map<Integer, User> userStorage = new HashMap<>();
+    private Map<Integer, Player> userStorage = new HashMap<>();
 
-    public Storage(){
+    public Storage() {
 
     }
 
@@ -45,19 +43,19 @@ public class Storage implements UserDAO, BetDAO {
      * @return user object if user exist otherwise return -1
      */
     @Override
-    public User getUser(String username, int account) {
+    public Player getUser(String username, int account) {
 
         return userStorage.get(account);
     }
 
     @Override
-    public User addUser(String name, int account, int balance, String curr, String dateOfBorn) {
+    public Player addUser(String name, int account, int balance, String curr, String dateOfBorn) {
 
         Player player = Player.builder()
                 .accountNumber(account)
                 .balance(balance)
                 .currency(Currency.getEnum(curr))
-                .dateOfBirth(DateUtil.dateParser(dateOfBorn))
+                .dateOfBirth((dateOfBorn))
                 .build();
         userStorage.put(account, player);
         return player;
@@ -65,9 +63,9 @@ public class Storage implements UserDAO, BetDAO {
 
     @Override
     public int getUserBalance(int account) {
-        if(userStorage.containsKey(account)){
-            return ((Player)userStorage.get(account)).getBalance();
-        } else{
+        if (userStorage.containsKey(account)) {
+            return  userStorage.get(account).getBalance();
+        } else {
             return -1;
         }
 
@@ -75,8 +73,8 @@ public class Storage implements UserDAO, BetDAO {
 
     @Override
     public void updUserBalance(int account, int newBalance) {
-        Player player = (Player)userStorage.get(account);
+        Player player = userStorage.get(account);
         player.setBalance(newBalance);
-        userStorage.put(account,player);
+        userStorage.put(account, player);
     }
 }

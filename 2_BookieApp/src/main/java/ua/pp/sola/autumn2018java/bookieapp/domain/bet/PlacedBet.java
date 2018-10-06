@@ -12,25 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ua.pp.sola.autumn2018java.bookieapp.service;
+package ua.pp.sola.autumn2018java.bookieapp.domain.bet;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An implementation of
  *
+ * @param
  * @author Bohdan Pysarenko
  * @version 1.0
  * @since 1.0
  */
-public class DateUtil {
-    private DateUtil(){
-        throw new UnsupportedOperationException("A class instance can't be created.");
-    }
+@Getter
+@Setter
+public class PlacedBet {
+    private Bet bet;
+    private int sum;
 
-    public static LocalDateTime dateParser(String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-        return  LocalDateTime.parse(date, formatter);
+    public PlacedBet(Bet bet, int sum) {
+        this.bet = bet;
+        this.sum = sum;
     }
 }

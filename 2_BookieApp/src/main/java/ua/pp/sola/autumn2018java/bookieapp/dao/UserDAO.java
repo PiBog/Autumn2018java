@@ -14,7 +14,7 @@
  */
 package ua.pp.sola.autumn2018java.bookieapp.dao;
 
-import ua.pp.sola.autumn2018java.bookieapp.domain.user.User;
+import ua.pp.sola.autumn2018java.bookieapp.domain.user.Player;
 
 /**
  * DAO interface for User object
@@ -31,9 +31,9 @@ public interface UserDAO {
      * @param account number of user's account
      * @return user object if user exist otherwise return -1
      */
-    User getUser(String username, int account);
+    Player getUser(String username, int account);
 
-    User addUser(String name, int account, int balance, String curr, String dateOfBorn);
+    Player addUser(String name, int account, int balance, String curr, String dateOfBorn);
 
     int getUserBalance(int account);
 

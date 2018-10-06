@@ -30,18 +30,26 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Builder
-public class Player extends User {
+@Builder()
+public class Player  {
+    private String username;
     private int accountNumber;
     private int balance;
     private Currency currency;
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
 
-    public Player(String username, int accountNumber, int balance, Currency currency, LocalDateTime dateOfBirth) {
+    public Player(){}
+
+    public Player(String username, int accountNumber, int balance, Currency currency, String dateOfBirth) {
         this.username = username;
         this.accountNumber = accountNumber;
         this.balance = balance;
         this.currency = currency;
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public int increaseBalnce(int odd){
+        this.balance-=odd;
+        return  this.balance;
     }
 }
